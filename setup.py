@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.3.dev0'
+version = '1.3.dev0.rtk'
 
 setup(name='Products.PloneLDAP',
       version=version,
@@ -28,6 +28,6 @@ setup(name='Products.PloneLDAP',
           'setuptools',
           'Products.PlonePAS',
           'Products.LDAPMultiPlugins',
-          'Products.LDAPUserFolder',
+          'Products.LDAPUserFolder == 2.27.rtk',
           ],
       )

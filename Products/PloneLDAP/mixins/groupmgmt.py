@@ -8,8 +8,9 @@ class GroupManagementMixin:
     security = ClassSecurityInfo()
 
     security.declarePrivate('addGroup')
-    def addGroup(self, id, **kw):
-        self.acl_users.manage_addGroup(id)
+    def addGroup(self, group_id, **kwargs):
+        self.acl_users.manage_addGroup(group_id)
+        self.updateGroup(group_id=group_id, **kwargs)
 
     security.declarePrivate('addPrincipalToGroup')
     def addPrincipalToGroup(self, principal_id, group_id):
@@ -41,11 +42,37 @@ class GroupManagementMixin:
             return False
 
     security.declarePrivate('updateGroup')
-    def updateGroup(self, id, **kw):
-        # Don't complain unless we are actually asked to do something.
-        values = [v for v in kw.values() if v is not None]
-        if len(values) > 0:
-            raise NotImplementedError()
+    def updateGroup(self, group_id, title=None, description=None, **kwargs):
+        """ Update properties for 'group_id' """
+
+        not_supported = [
+            arg_name
+            for arg_name, value in kwargs.iteritems()
+            if value is not None
+        ]
+
+        if not_supported:
+            raise NotImplementedError(
+                'Handling of {} is not implemented'.format(not_supported)
+            )
+
+        old_attrs = self.acl_users.searchGroups(
+            exact_match=True,
+            cn=group_id,
+        )[0]
+
+        new_attrs = {}
+
+        if title is not None:
+            new_attrs['displayName'] = [title]
+        if description is not None:
+            new_attrs['description'] = [description]
+
+        if new_attrs:
+            self.acl_users.manage_update_group(
+                dn=old_attrs['dn'],
+                attrs=new_attrs,
+            )
 
     security.declarePrivate('setRolesForGroup')
     def setRolesForGroup(self, group_id, roles=()):
