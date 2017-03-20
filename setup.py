@@ -28,6 +28,6 @@ setup(name='Products.PloneLDAP',
           'setuptools',
           'Products.PlonePAS',
           'Products.LDAPMultiPlugins',
-          'Products.LDAPUserFolder == 2.27.rtk',
+          'Products.LDAPUserFolder == 2.27.9999',
           ],
       )
